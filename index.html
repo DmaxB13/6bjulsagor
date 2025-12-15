@@ -12,17 +12,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyA2OBwkkgjHfRxXFah-hxqmSH05sYJU3kM",
   authDomain: "bs-julsagor.firebaseapp.com",
+  databaseURL: "https://bs-julsagor-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "bs-julsagor",
   storageBucket: "bs-julsagor.firebasestorage.app",
   messagingSenderId: "226538425492",
@@ -30,9 +24,23 @@ const firebaseConfig = {
   measurementId: "G-SW10JC8HH4"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const textRef = db.ref("sharedText");
+
+    const box = document.getElementById("box");
+
+    // Update text when database changes
+    textRef.on("value", snapshot => {
+      if (box.value !== snapshot.val()) {
+        box.value = snapshot.val() || "";
+      }
+    });
+
+    // Save text when user types
+    box.addEventListener("input", () => {
+      textRef.set(box.value);
+    });
   </script>
 </body>
 </html>
